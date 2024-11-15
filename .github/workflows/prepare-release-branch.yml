@@ -60,16 +60,13 @@ jobs:
             stable_version=$PRERELEASE_VERSION
           fi
 
-          unstable_version=$(./.github/scripts/eachdist.py version --mode prerelease)
-          unstable_version=${unstable_version//.dev/}
 
           if [[ $stable_version =~ ^([0-9]+)\.([0-9]+)\.0$ ]]; then
             stable_version_branch_part=$(echo $stable_version | sed -E 's/([0-9]+)\.([0-9]+)\.0/\1.\2.0/')
-            unstable_version_branch_part=$(echo $unstable_version | sed -E 's/0\.([0-9]+)b0/0.\1b0/')
-            release_branch_name="release/v${stable_version_branch_part}-${unstable_version_branch_part}"
+            release_branch_name="release/v${stable_version_branch_part}"
           elif [[ $stable_version =~ ^([0-9]+)\.([0-9]+)\.0 ]]; then
             # pre-release version, e.g. 1.9.0rc2
-            release_branch_name="release/v$stable_version-$unstable_version"
+            release_branch_name="release/v$stable_version"
           else
             echo "unexpected version: $stable_version"
             exit 1
@@ -77,7 +74,6 @@ jobs:
           git push origin HEAD:$release_branch_name
 
           echo "STABLE_VERSION=$stable_version" >> $GITHUB_ENV
-          echo "UNSTABLE_VERSION=$unstable_version" >> $GITHUB_ENV
           echo "RELEASE_BRANCH_NAME=$release_branch_name" >> $GITHUB_ENV
 
       - name: Update the change log with the approximate release date
@@ -92,8 +88,8 @@ jobs:
           USER_NAME: ${{ secrets.GIT_USER_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          message="Prepare release ${STABLE_VERSION}/${UNSTABLE_VERSION}"
-          branch="monocle/prepare-release-${STABLE_VERSION}-${UNSTABLE_VERSION}"
+          message="Prepare release ${STABLE_VERSION}"
+          branch="monocle/prepare-release-${STABLE_VERSION}"
           git config --global user.email "$USER_EMAIL"
           git config --global user.name "$USER_NAME"
           git commit -a -m "$message"
@@ -126,9 +122,6 @@ jobs:
             stable_version=$PRERELEASE_VERSION
           fi
 
-          unstable_version=$(./.github/scripts/eachdist.py version --mode prerelease)
-          unstable_version=${unstable_version//.dev/}
-
           if [[ $stable_version =~ ^([0-9]+)\.([0-9]+)\.0$ ]]; then
             stable_major="${BASH_REMATCH[1]}"
             stable_minor="${BASH_REMATCH[2]}"
@@ -143,26 +136,14 @@ jobs:
             exit 1
           fi
 
-          if [[ $unstable_version =~ ^0\.([0-9]+)b[0-9]+$ ]]; then
-            unstable_minor="${BASH_REMATCH[1]}"
-          else
-            echo "unexpected unstable_version: $unstable_version"
-            exit 1
-          fi
-
-          unstable_next_version="0.$((unstable_minor + 1))b0"
-
           echo "STABLE_VERSION=${stable_version}" >> $GITHUB_ENV
           echo "STABLE_NEXT_VERSION=${stable_next_version}.dev" >> $GITHUB_ENV
-
-          echo "UNSTABLE_VERSION=${unstable_version}" >> $GITHUB_ENV
-          echo "UNSTABLE_NEXT_VERSION=${unstable_next_version}.dev" >> $GITHUB_ENV
 
       - name: Update the change log on main
         run: |
           # the actual release date on main will be updated at the end of the release workflow
           date=$(date "+%Y-%m-%d")
-          sed -Ei "s/^## Unreleased$/## Version ${STABLE_VERSION}\/${UNSTABLE_VERSION} ($date)/" CHANGELOG.md
+          sed -Ei "s/^## Unreleased$/## Version ${STABLE_VERSION} ($date)/" CHANGELOG.md
 
       - name: Create pull request against main
         env:
@@ -171,9 +152,9 @@ jobs:
           USER_NAME: ${{ secrets.GIT_USER_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          message="Update version to ${STABLE_NEXT_VERSION}/${UNSTABLE_NEXT_VERSION}"
-          body="Update version to \${STABLE_NEXT_VERSION}/${UNSTABLE_NEXT_VERSION}\."
-          branch="monocle/update-version-to-${STABLE_NEXT_VERSION}-${UNSTABLE_NEXT_VERSION}"
+          message="Update version to ${STABLE_NEXT_VERSION}"
+          body="Update version to \${STABLE_NEXT_VERSION}\."
+          branch="monocle/update-version-to-${STABLE_NEXT_VERSION}"
           git config --global user.email "$USER_EMAIL"
           git config --global user.name "$USER_NAME"
           git commit -a -m "$message"

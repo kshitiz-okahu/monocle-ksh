@@ -10,13 +10,13 @@ This GitHub Actions workflow automates the preparation of a release branch. It i
    - Validates the pre-release version number.
 
 2. **Create Pull Request Against Release Branch**:
-   - Creates a new release branch based on the stable and unstable versions.
+   - Creates a new release branch based on the stable version.
    - Updates the changelog with the approximate release date.
    - Creates a new pre release branch
    - Creates a pull request against the release branch.
 
 3. **Create Pull Request Against Main**:
-   - Sets environment variables for stable and unstable versions.
+   - Sets environment variables for stable version.
    - Updates the changelog on the `main` branch with the release date.
    - Creates a pull request against the `main` branch to update the version.
 
@@ -26,7 +26,6 @@ This GitHub Actions workflow automates the preparation of a release branch. It i
   - This script is used to manage versioning for the project.
   - It has two modes:
     - `--mode stable`: Retrieves the stable version of the project.
-    - `--mode prerelease`: Retrieves the pre-release version of the project.
   - The script is executed with the necessary permissions using `chmod +x`.
 
 - **CHANGELOG.md**:
