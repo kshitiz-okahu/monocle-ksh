@@ -153,7 +153,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           message="Update version to ${STABLE_NEXT_VERSION}"
-          body="Update version to \${STABLE_NEXT_VERSION}\."
+          body="Update version to ${STABLE_NEXT_VERSION}."
           branch="monocle/update-version-to-${STABLE_NEXT_VERSION}"
           git config --global user.email "$USER_EMAIL"
           git config --global user.name "$USER_NAME"
