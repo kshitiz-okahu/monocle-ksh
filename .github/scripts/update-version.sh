@@ -3,7 +3,7 @@
 # Update version in pyproject.toml
 
 # Linux syntax
-sed -i "/\[stable\]/{n;s/version=.*/version=$1/}" eachdist.ini
+# sed -i "/\[stable\]/{n;s/version=.*/version=$1/}" eachdist.ini
 
 # Updates version in pyproject.toml
 

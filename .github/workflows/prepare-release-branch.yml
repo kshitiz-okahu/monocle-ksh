@@ -29,9 +29,9 @@ jobs:
             echo the change log is missing an \"Unreleased\" section
             exit 1
           fi
-          chmod +x ./.github/scripts/eachdist.py
+          chmod +x ./.github/scripts/get-version.sh
           if [[ ! -z $PRERELEASE_VERSION ]]; then
-            stable_version=$(./.github/scripts/eachdist.py version --mode stable)
+            stable_version=$(./.github/scripts/get-version.sh version --mode stable)
             stable_version=${stable_version//.dev/}
             if [[ $PRERELEASE_VERSION != ${stable_version}* ]]; then
               echo "$PRERELEASE_VERSION is not a prerelease for the version on main ($stable_version)"
@@ -51,10 +51,9 @@ jobs:
         env:
           PRERELEASE_VERSION: ${{ github.event.inputs.prerelease_version }}
         run: |
-          chmod +x ./.github/scripts/eachdist.py
 
           if [[ -z $PRERELEASE_VERSION ]]; then
-            stable_version=$(./.github/scripts/eachdist.py version --mode stable)
+            stable_version=$(./.github/scripts/get-version.sh version --mode stable)
             stable_version=${stable_version//.dev/}
           else
             stable_version=$PRERELEASE_VERSION
@@ -113,10 +112,9 @@ jobs:
         env:
           PRERELEASE_VERSION: ${{ github.event.inputs.prerelease_version }}
         run: |
-          chmod +x ./.github/scripts/eachdist.py
 
           if [[ -z $PRERELEASE_VERSION ]]; then
-            stable_version=$(./.github/scripts/eachdist.py version --mode stable)
+            stable_version=$(./.github/scripts/get-version.sh version --mode stable)
             stable_version=${stable_version//.dev/}
           else
             stable_version=$PRERELEASE_VERSION
