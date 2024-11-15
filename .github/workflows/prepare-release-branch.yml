@@ -32,7 +32,6 @@ jobs:
           chmod +x ./.github/scripts/get-version.sh
           if [[ ! -z $PRERELEASE_VERSION ]]; then
             stable_version=$(./.github/scripts/get-version.sh version --mode stable)
-            stable_version=${stable_version//.dev/}
             if [[ $PRERELEASE_VERSION != ${stable_version}* ]]; then
               echo "$PRERELEASE_VERSION is not a prerelease for the version on main ($stable_version)"
               exit 1
@@ -54,7 +53,6 @@ jobs:
 
           if [[ -z $PRERELEASE_VERSION ]]; then
             stable_version=$(./.github/scripts/get-version.sh version --mode stable)
-            stable_version=${stable_version//.dev/}
           else
             stable_version=$PRERELEASE_VERSION
           fi
@@ -115,7 +113,6 @@ jobs:
 
           if [[ -z $PRERELEASE_VERSION ]]; then
             stable_version=$(./.github/scripts/get-version.sh version --mode stable)
-            stable_version=${stable_version//.dev/}
           else
             stable_version=$PRERELEASE_VERSION
           fi
@@ -135,7 +132,7 @@ jobs:
           fi
 
           echo "STABLE_VERSION=${stable_version}" >> $GITHUB_ENV
-          echo "STABLE_NEXT_VERSION=${stable_next_version}.dev" >> $GITHUB_ENV
+          echo "STABLE_NEXT_VERSION=${stable_next_version}" >> $GITHUB_ENV
 
       - name: Update version
         run: |
