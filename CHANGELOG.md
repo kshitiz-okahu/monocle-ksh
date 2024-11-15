@@ -1,5 +1,5 @@
 
-## Unreleased
+## Version 0.2.0/0.50b0 (2024-11-15)
 
 
 ### Added
