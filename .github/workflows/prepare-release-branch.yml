@@ -76,7 +76,7 @@ jobs:
       - name: Update the change log with the approximate release date
         run: |
           date=$(date "+%Y-%m-%d")
-          sed -Ei "s/^## Unreleased$/## Version ${{ github.event.inputs.prerelease_version }}\/ ($date)/" CHANGELOG.md
+          sed -Ei "s/^## Unreleased$/## Version ${STABLE_VERSION} ($date)/" CHANGELOG.md
 
       - name: Create pull request against the release branch
         env:
