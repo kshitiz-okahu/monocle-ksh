@@ -1,6 +1,6 @@
 import os
 import logging
-from monocle_apptrace.utils import get_wrapper_methods_config
+from okahu_apptrace.utils import get_wrapper_methods_config
 
 logger = logging.getLogger(__name__)
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))

@@ -1,4 +1,4 @@
-## Monocle Concepts
+## Okahu Concepts
 
 ### Traces
 Traces are the full view of a single end-to-end application execution. 
@@ -12,9 +12,9 @@ Spans are the individual steps executed by the application to perform a GenAI re
 
 Examples of spans include app retrieving vectors from DB, app querying LLM for inference etc. The span includes the type of operation, start time, duration and metadata relevant to that step eg Model name, parameters and model endpoint/server for an inference request.
 
-## Contribute to Monocle 
+## Contribute to Okahu 
 
-Monocle includes:
+Okahu includes:
 - Methods for instrumentation of app code 
   - Base code for wrapping methods of interest in included in current folder
   - Framework specific code is organized in a folder with the framework name
@@ -22,14 +22,14 @@ Monocle includes:
   - See [metamodel](./metamodel/README.md) for supported GenAI entities, how functions operating on those entities map to spans and format of spans 
 - Exporters to send trace data to various locations. See [exporters](./exporters)
 
-See [Monocle committer guide](/Monocle_committer_guide.md). 
+See [Okahu committer guide](/Okahu_committer_guide.md). 
 
-## Get Monocle
+## Get Okahu
 
 Option 1 - Download released packages from Pypi
 ``` 
     python3 -m pip install pipenv
-    pip install monocle-apptrace
+    pip install okahu-apptrace
 ```
 
 Option 2 - Build and install locally from source
@@ -41,7 +41,7 @@ Option 2 - Build and install locally from source
     pipenv install build
 ```
 
-## Examples of app instrumentation with Monocle
+## Examples of app instrumentation with Okahu
  
 ### apps written using LLM orchestration frameworks 
 
@@ -50,12 +50,12 @@ from langchain.chains import LLMChain
 from langchain_openai import OpenAI
 from langchain.prompts import PromptTemplate
 
-# Import the monocle_apptrace instrumentation method 
-from monocle_apptrace.instrumentor import setup_monocle_telemetry
+# Import the okahu_apptrace instrumentation method 
+from okahu_apptrace.instrumentor import setup_okahu_telemetry
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 
-# Call the setup Monocle telemetry method
-setup_monocle_telemetry(workflow_name = "simple_math_app",
+# Call the setup Okahu telemetry method
+setup_okahu_telemetry(workflow_name = "simple_math_app",
         span_processors=[BatchSpanProcessor(ConsoleSpanExporter())])
 
 llm = OpenAI()
@@ -72,13 +72,13 @@ chain.invoke({"number":2})
 
 ```python
 
-# Import the monocle_apptrace instrumentation method
-from monocle_apptrace.wrapper import WrapperMethod,task_wrapper,atask_wrapper
+# Import the okahu_apptrace instrumentation method
+from okahu_apptrace.wrapper import WrapperMethod,task_wrapper,atask_wrapper
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 
 # Extend the default wrapped methods list as follows
 app_name = "simple_math_app"
-setup_monocle_telemetry(
+setup_okahu_telemetry(
         workflow_name=app_name,
         span_processors=[BatchSpanProcessor(ConsoleSpanExporter())],
         wrapper_methods=[

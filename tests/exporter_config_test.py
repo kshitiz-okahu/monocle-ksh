@@ -1,23 +1,23 @@
 import os
 import unittest
 
-from monocle_apptrace.exporters.monocle_exporters import get_monocle_exporter
+from okahu_apptrace.exporters.okahu_exporters import get_okahu_exporter
 
 class TestHandler(unittest.TestCase):
     def test_default_exporter(self):
-        default_exporter = get_monocle_exporter()
+        default_exporter = get_okahu_exporter()
         assert default_exporter.__class__.__name__ == "FileSpanExporter"
 
     def test_fallback_exporter(self):
         """ No Okahu API key, it should fall back to console exporter"""
-        os.environ["MONOCLE_EXPORTER"] = "okahu"
-        default_exporter = get_monocle_exporter()
+        os.environ["OKAHU_EXPORTER"] = "okahu"
+        default_exporter = get_okahu_exporter()
         assert default_exporter.__class__.__name__ == "ConsoleSpanExporter"
 
     def test_set_exporter(self):
-        os.environ["MONOCLE_EXPORTER"] = "okahu"
+        os.environ["OKAHU_EXPORTER"] = "okahu"
         os.environ["OKAHU_API_KEY"] = "foo"
-        default_exporter = get_monocle_exporter()
+        default_exporter = get_okahu_exporter()
         assert default_exporter.__class__.__name__ == "OkahuSpanExporter"
 
 if __name__ == "__main__":

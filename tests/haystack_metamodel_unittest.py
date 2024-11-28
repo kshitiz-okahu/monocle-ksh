@@ -12,10 +12,10 @@ from http_span_exporter import HttpSpanExporter
 from haystack.components.generators import OpenAIGenerator
 from haystack.dataclasses import ChatMessage
 from haystack.utils import Secret
-from monocle_apptrace.instrumentor import setup_monocle_telemetry
-from monocle_apptrace.wrap_common import WORKFLOW_TYPE_MAP
-from monocle_apptrace.wrapper import WrapperMethod
-from monocle_apptrace.wrap_common import llm_wrapper
+from okahu_apptrace.instrumentor import setup_okahu_telemetry
+from okahu_apptrace.wrap_common import WORKFLOW_TYPE_MAP
+from okahu_apptrace.wrapper import WrapperMethod
+from okahu_apptrace.wrap_common import llm_wrapper
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 from haystack.components.retrievers import InMemoryBM25Retriever
 from haystack.document_stores.in_memory import InMemoryDocumentStore
@@ -31,7 +31,7 @@ class TestHandler(unittest.TestCase):
     def test_haystack(self, mock_post):
         api_key = os.getenv("OPENAI_API_KEY")
         workflow_name = "haystack_app_1"
-        setup_monocle_telemetry(
+        setup_okahu_telemetry(
             workflow_name=workflow_name,
             span_processors=[BatchSpanProcessor(HttpSpanExporter("https://localhost:3000/api/v1/traces"))],
             wrapper_methods=[

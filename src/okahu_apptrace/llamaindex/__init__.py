@@ -1,6 +1,6 @@
 # pylint: disable=protected-access
 import os
-from monocle_apptrace.utils import get_wrapper_methods_config
+from okahu_apptrace.utils import get_wrapper_methods_config
 
 
 def get_llm_span_name_for_openai(instance):

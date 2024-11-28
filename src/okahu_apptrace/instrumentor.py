@@ -9,16 +9,16 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor, SpanProcessor
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry import trace
 from opentelemetry.context import get_value, attach, set_value
-from monocle_apptrace.utils import process_wrapper_method_config
-from monocle_apptrace.wrap_common import SESSION_PROPERTIES_KEY
-from monocle_apptrace.wrapper import INBUILT_METHODS_LIST, WrapperMethod
-from monocle_apptrace.exporters.monocle_exporters import get_monocle_exporter
+from okahu_apptrace.utils import process_wrapper_method_config
+from okahu_apptrace.wrap_common import SESSION_PROPERTIES_KEY
+from okahu_apptrace.wrapper import INBUILT_METHODS_LIST, WrapperMethod
+from okahu_apptrace.exporters.okahu_exporters import get_okahu_exporter
 
 logger = logging.getLogger(__name__)
 
 _instruments = ()
 
-class MonocleInstrumentor(BaseInstrumentor):
+class OkahuInstrumentor(BaseInstrumentor):
     workflow_name: str = ""
     user_wrapper_methods: list[WrapperMethod] = []
     instrumented_method_list: list[object] = []
@@ -83,14 +83,14 @@ class MonocleInstrumentor(BaseInstrumentor):
                              object:{wrap_object},
                              method:{wrap_method}""")
 
-def setup_monocle_telemetry(
+def setup_okahu_telemetry(
         workflow_name: str,
         span_processors: List[SpanProcessor] = None,
         wrapper_methods: List[WrapperMethod] = None):
     resource = Resource(attributes={
         SERVICE_NAME: workflow_name
     })
-    span_processors = span_processors or [BatchSpanProcessor(get_monocle_exporter())]
+    span_processors = span_processors or [BatchSpanProcessor(get_okahu_exporter())]
     trace_provider = TracerProvider(resource=resource)
     attach(set_value("workflow_name", workflow_name))
     tracer_provider_default = trace.get_tracer_provider()
@@ -104,7 +104,7 @@ def setup_monocle_telemetry(
             trace_provider.add_span_processor(processor)
     if is_proxy_provider:
         trace.set_tracer_provider(trace_provider)
-    instrumentor = MonocleInstrumentor(user_wrapper_methods=wrapper_methods or [])
+    instrumentor = OkahuInstrumentor(user_wrapper_methods=wrapper_methods or [])
     # instrumentor.app_name = workflow_name
     if not instrumentor.is_instrumented_by_opentelemetry:
         instrumentor.instrument()

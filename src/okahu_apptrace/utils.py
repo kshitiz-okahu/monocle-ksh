@@ -4,7 +4,7 @@ from importlib import import_module
 import os
 from opentelemetry.trace import Span
 from opentelemetry.context import attach, set_value, get_value
-from monocle_apptrace.constants import azure_service_map, aws_service_map
+from okahu_apptrace.constants import azure_service_map, aws_service_map
 from json.decoder import JSONDecodeError
 logger = logging.getLogger(__name__)
 
@@ -115,7 +115,7 @@ def process_wrapper_method_config(
             load_output_processor(wrapper_method, attributes_config_base_path)
 
 def get_wrapper_method(package_name: str, method_name: str):
-    wrapper_module = import_module("monocle_apptrace." + package_name)
+    wrapper_module = import_module("okahu_apptrace." + package_name)
     return getattr(wrapper_module, method_name)
 
 def update_span_with_infra_name(span: Span, span_key: str):
