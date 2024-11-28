@@ -8,7 +8,7 @@ import boto3
 from botocore.exceptions import ClientError
 from opentelemetry.sdk.trace import ReadableSpan
 from opentelemetry.sdk.trace.export import SpanExporter, SpanExportResult
-from monocle_apptrace.exporters.base_exporter import SpanExporterBase
+from okahu_apptrace.exporters.base_exporter import SpanExporterBase
 from typing import Sequence
 import json
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ class S3SpanExporter(SpanExporterBase):
     def __init__(self, bucket_name=None, region_name="us-east-1"):
         super().__init__()
         # Use environment variables if credentials are not provided
-        DEFAULT_FILE_PREFIX = "monocle_trace__"
+        DEFAULT_FILE_PREFIX = "okahu_trace__"
         DEFAULT_TIME_FORMAT = "%Y-%m-%d__%H.%M.%S"
         self.max_batch_size = 500
         self.export_interval = 1
@@ -27,7 +27,7 @@ class S3SpanExporter(SpanExporterBase):
             aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
             region_name=region_name,
         )
-        self.bucket_name = bucket_name or os.getenv('MONOCLE_S3_BUCKET_NAME','default-bucket')
+        self.bucket_name = bucket_name or os.getenv('OKAHU_S3_BUCKET_NAME','default-bucket')
         self.file_prefix = DEFAULT_FILE_PREFIX
         self.time_format = DEFAULT_TIME_FORMAT
         self.export_queue = []

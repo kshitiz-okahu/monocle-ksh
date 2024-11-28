@@ -9,25 +9,25 @@ from azure.core.exceptions import ResourceNotFoundError, ClientAuthenticationErr
 from opentelemetry.sdk.trace import ReadableSpan
 from opentelemetry.sdk.trace.export import SpanExporter, SpanExportResult
 from typing import Sequence
-from monocle_apptrace.exporters.base_exporter import SpanExporterBase
+from okahu_apptrace.exporters.base_exporter import SpanExporterBase
 import json
 logger = logging.getLogger(__name__)
 
 class AzureBlobSpanExporter(SpanExporterBase):
     def __init__(self, connection_string=None, container_name=None):
         super().__init__()
-        DEFAULT_FILE_PREFIX = "monocle_trace_"
+        DEFAULT_FILE_PREFIX = "okahu_trace_"
         DEFAULT_TIME_FORMAT = "%Y-%m-%d_%H.%M.%S"
         self.max_batch_size = 500
         self.export_interval = 1
         # Use default values if none are provided
         if not connection_string:
-            connection_string = os.getenv('MONOCLE_BLOB_CONNECTION_STRING')
+            connection_string = os.getenv('OKAHU_BLOB_CONNECTION_STRING')
             if not connection_string:
                 raise ValueError("Azure Storage connection string is not provided or set in environment variables.")
 
         if not container_name:
-            container_name = os.getenv('MONOCLE_BLOB_CONTAINER_NAME', 'default-container')
+            container_name = os.getenv('OKAHU_BLOB_CONTAINER_NAME', 'default-container')
 
         self.blob_service_client = BlobServiceClient.from_connection_string(connection_string)
         self.container_name = container_name

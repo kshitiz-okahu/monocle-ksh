@@ -4,9 +4,9 @@ import os
 import inspect
 from urllib.parse import urlparse
 from opentelemetry.trace import Span, Tracer
-from monocle_apptrace.utils import resolve_from_alias, update_span_with_infra_name, with_tracer_wrapper, get_embedding_model, get_attribute, get_workflow_name, set_embedding_model
-from monocle_apptrace.utils import set_attribute
-from monocle_apptrace.utils import get_fully_qualified_class_name, flatten_dict, get_nested_value
+from okahu_apptrace.utils import resolve_from_alias, update_span_with_infra_name, with_tracer_wrapper, get_embedding_model, get_attribute, get_workflow_name, set_embedding_model
+from okahu_apptrace.utils import set_attribute
+from okahu_apptrace.utils import get_fully_qualified_class_name, flatten_dict, get_nested_value
 from opentelemetry.context import get_value, attach, set_value
 
 # added comment
@@ -82,7 +82,7 @@ def get_embedding_model_haystack(instance):
     try:
         if hasattr(instance, 'get_component'):
             text_embedder = instance.get_component('text_embedder')
-            if text_embedder and hasattr(text_embedder, 'model'):
+            if (text_embedder and hasattr(text_embedder, 'model')):
                 # Set the embedding model attribute
                 return text_embedder.model
     except:
@@ -287,7 +287,7 @@ def llm_wrapper(tracer: Tracer, to_wrap, wrapped, instance, args, kwargs):
 def update_llm_endpoint(curr_span: Span, instance):
     # Lambda to set attributes if values are not None
     __set_span_attribute_if_not_none = lambda span, **kwargs: [
-        span.set_attribute(k, v) for k, v in kwargs.items() if v is not None
+        span.set_attribute(k, v) for k, v if v is not None
     ]
 
     triton_llm_endpoint = os.environ.get("TRITON_LLM_ENDPOINT")

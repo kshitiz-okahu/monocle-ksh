@@ -4,9 +4,9 @@ import os
 import unittest
 from dummy_class import DummyClass, dummy_wrapper
 
-from monocle_apptrace.instrumentor import setup_monocle_telemetry
-from monocle_apptrace.wrapper import WrapperMethod
-from monocle_apptrace.exporters.file_exporter import FileSpanExporter
+from okahu_apptrace.instrumentor import setup_okahu_telemetry
+from okahu_apptrace.wrapper import WrapperMethod
+from okahu_apptrace.exporters.file_exporter import FileSpanExporter
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 logger = logging.getLogger()
@@ -23,7 +23,7 @@ class TestHandler(unittest.TestCase):
         app_name = "file_test"
         file_exporter = FileSpanExporter(time_format="%Y-%m-%d")
         span_processor = BatchSpanProcessor(file_exporter)
-        setup_monocle_telemetry(
+        setup_okahu_telemetry(
             workflow_name=app_name,
             span_processors=[
                     span_processor
@@ -58,4 +58,3 @@ class TestHandler(unittest.TestCase):
         except Exception as ex:
             print("Got error " + str(ex))
             assert False
-

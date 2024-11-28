@@ -8,7 +8,7 @@ from opentelemetry.sdk.trace import ReadableSpan
 from opentelemetry.sdk.trace.export import SpanExporter, SpanExportResult
 from opentelemetry.sdk.resources import SERVICE_NAME
 
-DEFAULT_FILE_PREFIX:str = "monocle_trace_"
+DEFAULT_FILE_PREFIX:str = "okahu_trace_"
 DEFAULT_TIME_FORMAT:str = "%Y-%m-%d_%H.%M.%S"
 
 class FileSpanExporter(SpanExporter):
