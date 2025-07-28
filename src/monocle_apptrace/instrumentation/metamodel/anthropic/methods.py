@@ -10,7 +10,7 @@ ANTHROPIC_METHODS = [
         "method": "create",
         "wrapper_method": task_wrapper,
         "span_handler": "non_framework_handler",
-        "output_processor": INFERENCE
+        "output_processor": INFERENCE,
     },
     {
         "package": "anthropic.resources",
@@ -18,7 +18,6 @@ ANTHROPIC_METHODS = [
         "method": "create",
         "wrapper_method": atask_wrapper,
         "span_handler": "non_framework_handler",
-        "output_processor": INFERENCE
+        "output_processor": INFERENCE,
     },
-
 ]

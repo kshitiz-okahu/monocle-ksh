@@ -26,7 +26,7 @@ service_type_map = {
     AZURE_APP_SERVICE_ENV_NAME: AZURE_APP_SERVICE_NAME,
     AZURE_FUNCTION_WORKER_ENV_NAME: AZURE_FUNCTION_NAME,
     AWS_LAMBDA_ENV_NAME: AWS_LAMBDA_SERVICE_NAME,
-    GITHUB_CODESPACE_ENV_NAME: GITHUB_CODESPACE_SERVICE_NAME
+    GITHUB_CODESPACE_ENV_NAME: GITHUB_CODESPACE_SERVICE_NAME,
 }
 
 # Env variables to identify infra service name
@@ -35,7 +35,7 @@ service_name_map = {
     AZURE_FUNCTION_NAME: AZURE_FUNCTION_IDENTIFIER_ENV_NAME,
     AZURE_ML_SERVICE_NAME: AZURE_ML_ENDPOINT_ENV_NAME,
     AWS_LAMBDA_SERVICE_NAME: AWS_LAMBDA_FUNCTION_IDENTIFIER_ENV_NAME,
-    GITHUB_CODESPACE_SERVICE_NAME: GITHUB_CODESPACE_IDENTIFIER_ENV_NAME
+    GITHUB_CODESPACE_SERVICE_NAME: GITHUB_CODESPACE_IDENTIFIER_ENV_NAME,
 }
 
 
@@ -49,11 +49,11 @@ llm_type_map = {
     "sagemakerllm": "aws_sagemaker",
     "chatbedrock": "aws_bedrock",
     "openaigenerator": "openai",
-    "bedrockruntime":"aws_bedrock",
-    "sagemakerruntime":"aws_sagemaker",
+    "bedrockruntime": "aws_bedrock",
+    "sagemakerruntime": "aws_sagemaker",
     "anthropic": "anthropic",
-    "chatanthropic":"anthropic",
-    "anthropicchatgenerator":"anthropic",
+    "chatanthropic": "anthropic",
+    "anthropicchatgenerator": "anthropic",
     "chatcompletionsclient": "azure_ai_inference",
     "embeddingsclient": "azure_ai_inference",
     "imageembeddingsclient": "azure_ai_inference",
@@ -73,11 +73,11 @@ QUERY = "input"
 RESPONSE = "response"
 SESSION_PROPERTIES_KEY = "session"
 INFRA_SERVICE_KEY = "infra_service_name"
-META_DATA = 'metadata'
+META_DATA = "metadata"
 MONOCLE_SCOPE_NAME_PREFIX = "monocle.scope."
-SCOPE_METHOD_LIST = 'MONOCLE_SCOPE_METHODS'
-SCOPE_METHOD_FILE = 'monocle_scopes.json'
-SCOPE_CONFIG_PATH = 'MONOCLE_SCOPE_CONFIG_PATH'
+SCOPE_METHOD_LIST = "MONOCLE_SCOPE_METHODS"
+SCOPE_METHOD_FILE = "monocle_scopes.json"
+SCOPE_CONFIG_PATH = "MONOCLE_SCOPE_CONFIG_PATH"
 TRACE_PROPOGATION_URLS = "MONOCLE_TRACE_PROPAGATATION_URLS"
 WORKFLOW_TYPE_KEY = "monocle.workflow_type"
 ADD_NEW_WORKFLOW = "monocle.add_new_workflow"
@@ -85,4 +85,4 @@ WORKFLOW_TYPE_GENERIC = "workflow.generic"
 MONOCLE_SDK_VERSION = "monocle_apptrace.version"
 MONOCLE_SDK_LANGUAGE = "monocle_apptrace.language"
 MONOCLE_DETECTED_SPAN_ERROR = "monocle_apptrace.detected_span_error"
-HTTP_SUCCESS_CODES = ('200', '201', '202', '204', '205', '206')
+HTTP_SUCCESS_CODES = ("200", "201", "202", "204", "205", "206")

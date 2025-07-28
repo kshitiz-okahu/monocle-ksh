@@ -18,5 +18,3 @@ A2A_CLIENT_METHODS = [
         "output_processor": A2A_CLIENT,
     },
 ]
-
-

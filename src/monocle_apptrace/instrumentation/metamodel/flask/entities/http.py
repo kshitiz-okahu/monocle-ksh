@@ -1,4 +1,5 @@
 from monocle_apptrace.instrumentation.metamodel.flask import _helper
+
 FLASK_HTTP_PROCESSOR = {
     "type": "http.process",
     "attributes": [
@@ -6,15 +7,15 @@ FLASK_HTTP_PROCESSOR = {
             {
                 "_comment": "request method, request URI",
                 "attribute": "method",
-                "accessor": lambda arguments: _helper.get_method(arguments['args'])
+                "accessor": lambda arguments: _helper.get_method(arguments["args"]),
             },
             {
                 "_comment": "request method, request URI",
                 "attribute": "route",
-                "accessor": lambda arguments: _helper.get_route(arguments['args'])
+                "accessor": lambda arguments: _helper.get_route(arguments["args"]),
             },
         ]
-    ]
+    ],
 }
 
 FLASK_RESPONSE_PROCESSOR = {
@@ -25,24 +26,28 @@ FLASK_RESPONSE_PROCESSOR = {
                 {
                     "_comment": "route params",
                     "attribute": "params",
-                    "accessor": lambda arguments: _helper.get_params(arguments['args'])
+                    "accessor": lambda arguments: _helper.get_params(arguments["args"]),
                 }
-         ]
-         },
+            ],
+        },
         {
             "name": "data.output",
             "attributes": [
                 {
                     "_comment": "status from HTTP response",
                     "attribute": "status",
-                    "accessor": lambda arguments: _helper.extract_status(arguments['instance'])
+                    "accessor": lambda arguments: _helper.extract_status(
+                        arguments["instance"]
+                    ),
                 },
                 {
                     "_comment": "this is result from LLM",
                     "attribute": "response",
-                    "accessor": lambda arguments: _helper.extract_response(arguments['instance'])
-                }
-            ]
-        }
+                    "accessor": lambda arguments: _helper.extract_response(
+                        arguments["instance"]
+                    ),
+                },
+            ],
+        },
     ]
 }

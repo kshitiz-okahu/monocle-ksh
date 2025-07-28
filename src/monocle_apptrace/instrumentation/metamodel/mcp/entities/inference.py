@@ -40,7 +40,7 @@ TOOLS = {
                 {
                     "_comment": "this is Tool output",
                     "attribute": "output",
-                    "accessor": lambda arguments: _helper.get_output_text(arguments)
+                    "accessor": lambda arguments: _helper.get_output_text(arguments),
                 },
             ],
         },

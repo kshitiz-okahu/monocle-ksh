@@ -4,10 +4,10 @@ from types import SimpleNamespace
 from monocle_apptrace.instrumentation.metamodel.azureaiinference import _helper
 from monocle_apptrace.instrumentation.common.utils import (
     get_error_message,
-    resolve_from_alias, 
+    resolve_from_alias,
     patch_instance_method,
     get_status,
-    get_exception_status_code
+    get_exception_status_code,
 )
 
 logger = logging.getLogger(__name__)
@@ -32,21 +32,29 @@ def process_stream(to_wrap, response, span_processor):
 
             try:
                 item = original_next()
-                
+
                 # Handle Azure AI Inference streaming chunks
-                if hasattr(item, 'choices') and item.choices:
+                if hasattr(item, "choices") and item.choices:
                     choice = item.choices[0]
-                    if hasattr(choice, 'delta') and hasattr(choice.delta, 'role') and choice.delta.role:
+                    if (
+                        hasattr(choice, "delta")
+                        and hasattr(choice.delta, "role")
+                        and choice.delta.role
+                    ):
                         role = choice.delta.role
-                    if hasattr(choice, 'delta') and hasattr(choice.delta, 'content') and choice.delta.content:
+                    if (
+                        hasattr(choice, "delta")
+                        and hasattr(choice.delta, "content")
+                        and choice.delta.content
+                    ):
                         if waiting_for_first_token:
                             waiting_for_first_token = False
                             first_token_time = time.time_ns()
 
                         accumulated_response += choice.delta.content
-                
+
                 # Check for usage information at the end of stream
-                if hasattr(item, 'usage') and item.usage:
+                if hasattr(item, "usage") and item.usage:
                     token_usage = item.usage
                     stream_closed_time = time.time_ns()
 
@@ -76,7 +84,7 @@ def process_stream(to_wrap, response, span_processor):
                 raise
 
         patch_instance_method(response, "__next__", new_next)
-        
+
     # For async iteration - patch __anext__ instead of __aiter__
     if to_wrap and hasattr(response, "__anext__"):
         original_anext = response.__anext__
@@ -86,21 +94,29 @@ def process_stream(to_wrap, response, span_processor):
 
             try:
                 item = await original_anext()
-                
+
                 # Handle Azure AI Inference streaming chunks
-                if hasattr(item, 'choices') and item.choices:
+                if hasattr(item, "choices") and item.choices:
                     choice = item.choices[0]
-                    if hasattr(choice, 'delta') and hasattr(choice.delta, 'role') and choice.delta.role:
+                    if (
+                        hasattr(choice, "delta")
+                        and hasattr(choice.delta, "role")
+                        and choice.delta.role
+                    ):
                         role = choice.delta.role
-                    if hasattr(choice, 'delta') and hasattr(choice.delta, 'content') and choice.delta.content:
+                    if (
+                        hasattr(choice, "delta")
+                        and hasattr(choice.delta, "content")
+                        and choice.delta.content
+                    ):
                         if waiting_for_first_token:
                             waiting_for_first_token = False
                             first_token_time = time.time_ns()
 
                         accumulated_response += choice.delta.content
-                
+
                 # Check for usage information at the end of stream
-                if hasattr(item, 'usage') and item.usage:
+                if hasattr(item, "usage") and item.usage:
                     token_usage = item.usage
                     stream_closed_time = time.time_ns()
 
@@ -141,35 +157,48 @@ INFERENCE = {
             {
                 "_comment": "Azure AI Inference provider type, endpoint",
                 "attribute": "type",
-                "accessor": lambda arguments: f"inference.{_helper.get_inference_type(arguments)}"
+                "accessor": lambda arguments: f"inference.{_helper.get_inference_type(arguments)}",
             },
             {
                 "attribute": "provider_name",
-                "accessor": lambda arguments: _helper.get_provider_name(arguments['instance'])
+                "accessor": lambda arguments: _helper.get_provider_name(
+                    arguments["instance"]
+                ),
             },
             {
                 "attribute": "inference_endpoint",
-                "accessor": lambda arguments: _helper.extract_inference_endpoint(arguments['instance'])
+                "accessor": lambda arguments: _helper.extract_inference_endpoint(
+                    arguments["instance"]
+                ),
             },
             {
                 "attribute": "deployment",
                 "accessor": lambda arguments: resolve_from_alias(
-                    arguments['instance'].__dict__,
-                    ['deployment', 'deployment_name', 'azure_deployment', '_deployment']
-                )
-            }
+                    arguments["instance"].__dict__,
+                    [
+                        "deployment",
+                        "deployment_name",
+                        "azure_deployment",
+                        "_deployment",
+                    ],
+                ),
+            },
         ],
         [
             {
                 "_comment": "LLM Model information",
                 "attribute": "name",
-                "accessor": lambda arguments: _helper.get_model_name(arguments)
+                "accessor": lambda arguments: _helper.get_model_name(arguments),
             },
             {
                 "attribute": "type",
-                "accessor": lambda arguments: f"model.llm.{_helper.get_model_name(arguments)}" if _helper.get_model_name(arguments) else "model.llm.unknown"
-            }
-        ]
+                "accessor": lambda arguments: (
+                    f"model.llm.{_helper.get_model_name(arguments)}"
+                    if _helper.get_model_name(arguments)
+                    else "model.llm.unknown"
+                ),
+            },
+        ],
     ],
     "events": [
         {
@@ -178,9 +207,11 @@ INFERENCE = {
                 {
                     "_comment": "Chat messages input to Azure AI Inference",
                     "attribute": "input",
-                    "accessor": lambda arguments: _helper.extract_messages(arguments['kwargs'])
+                    "accessor": lambda arguments: _helper.extract_messages(
+                        arguments["kwargs"]
+                    ),
                 }
-            ]
+            ],
         },
         {
             "name": "data.output",
@@ -188,23 +219,27 @@ INFERENCE = {
                 {
                     "_comment": "Response from Azure AI Inference",
                     "attribute": "response",
-                    "accessor": lambda arguments: _helper.extract_assistant_message(arguments)
+                    "accessor": lambda arguments: _helper.extract_assistant_message(
+                        arguments
+                    ),
                 },
                 {
                     "attribute": "error_code",
-                    "accessor": lambda arguments: get_error_message(arguments)
+                    "accessor": lambda arguments: get_error_message(arguments),
                 },
                 {
                     "attribute": "finish_reason",
-                    "accessor": lambda arguments: _helper.extract_finish_reason(arguments)
+                    "accessor": lambda arguments: _helper.extract_finish_reason(
+                        arguments
+                    ),
                 },
                 {
                     "attribute": "finish_type",
                     "accessor": lambda arguments: _helper.map_finish_reason_to_finish_type(
                         _helper.extract_finish_reason(arguments)
-                    )
-                }
-            ]
+                    ),
+                },
+            ],
         },
         {
             "name": "metadata",
@@ -212,11 +247,10 @@ INFERENCE = {
                 {
                     "_comment": "Usage metadata from Azure AI Inference",
                     "accessor": lambda arguments: _helper.update_span_from_llm_response(
-                        arguments['result'], 
-                        arguments.get('instance')
-                    )
+                        arguments["result"], arguments.get("instance")
+                    ),
                 }
-            ]
-        }
-    ]
+            ],
+        },
+    ],
 }

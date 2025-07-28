@@ -1,6 +1,9 @@
 import logging
 from threading import local
-from monocle_apptrace.instrumentation.common.utils import extract_http_headers, clear_http_scopes
+from monocle_apptrace.instrumentation.common.utils import (
+    extract_http_headers,
+    clear_http_scopes,
+)
 from monocle_apptrace.instrumentation.common.span_handler import SpanHandler
 from monocle_apptrace.instrumentation.common.constants import HTTP_SUCCESS_CODES
 from monocle_apptrace.instrumentation.common.utils import MonocleSpanException
@@ -15,26 +18,30 @@ MAX_DATA_LENGTH = 1000
 token_data = local()
 token_data.current_token = None
 
+
 def get_route(scope) -> str:
-    return scope.get('path', '')
+    return scope.get("path", "")
+
 
 def get_method(scope) -> str:
-    return scope.get('method', '')
+    return scope.get("method", "")
+
 
 def get_params(args) -> dict:
     try:
         query_bytes = args.get("query_string", "")
-        query_str = query_bytes.decode('utf-8')
+        query_str = query_bytes.decode("utf-8")
         params = urllib.parse.parse_qs(query_str)
-        question = params.get('question', [''])[0]
+        question = params.get("question", [""])[0]
         return question
     except Exception as e:
         logger.warning(f"Error extracting params: {e}")
         return {}
 
+
 def extract_response(response) -> str:
     try:
-        if hasattr(response, 'body'):
+        if hasattr(response, "body"):
             data = response.body
             answer = json.loads(data.decode("utf-8"))
             return answer
@@ -42,21 +49,27 @@ def extract_response(response) -> str:
         logger.warning(f"Error extracting response: {e}")
         return ""
 
+
 def extract_status(instance) -> str:
-    status = f"{instance.status_code}" if hasattr(instance, 'status_code') else ""
+    status = f"{instance.status_code}" if hasattr(instance, "status_code") else ""
     if status not in HTTP_SUCCESS_CODES:
         error_message = extract_response(instance)
         raise MonocleSpanException(f"error: {status} - {error_message}")
     return status
 
+
 def fastapi_pre_tracing(scope):
-    headers = {k.decode('utf-8').lower(): v.decode('utf-8')
-               for k, v in scope.get('headers', [])}
+    headers = {
+        k.decode("utf-8").lower(): v.decode("utf-8")
+        for k, v in scope.get("headers", [])
+    }
     token_data.current_token = extract_http_headers(headers)
+
 
 def fastapi_post_tracing():
     clear_http_scopes(token_data.current_token)
     token_data.current_token = None
+
 
 class FastAPISpanHandler(SpanHandler):
     def pre_tracing(self, to_wrap, wrapped, instance, args, kwargs):
@@ -66,7 +79,10 @@ class FastAPISpanHandler(SpanHandler):
 
     def post_tracing(self, to_wrap, wrapped, instance, args, kwargs, return_value):
         fastapi_post_tracing()
-        return super().post_tracing(to_wrap, wrapped, instance, args, kwargs, return_value)
+        return super().post_tracing(
+            to_wrap, wrapped, instance, args, kwargs, return_value
+        )
+
 
 class FastAPIResponseSpanHandler(SpanHandler):
     def post_tracing(self, to_wrap, wrapped, instance, args, kwargs, return_value):
@@ -75,8 +91,15 @@ class FastAPIResponseSpanHandler(SpanHandler):
             if ctx is not None:
                 parent_span: Span = ctx.get(_SPAN_KEY)
                 if parent_span is not None:
-                    self.hydrate_events(to_wrap, wrapped, instance, args, kwargs,
-                                        return_value, parent_span=parent_span)
+                    self.hydrate_events(
+                        to_wrap,
+                        wrapped,
+                        instance,
+                        args,
+                        kwargs,
+                        return_value,
+                        parent_span=parent_span,
+                    )
         except Exception as e:
             logger.info(f"Failed to propagate fastapi response: {e}")
         super().post_tracing(to_wrap, wrapped, instance, args, kwargs, return_value)

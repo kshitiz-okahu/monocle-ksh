@@ -1,7 +1,11 @@
 from monocle_apptrace.instrumentation.metamodel.teamsai import (
     _helper,
 )
-from monocle_apptrace.instrumentation.common.utils import get_error_message, get_llm_type
+from monocle_apptrace.instrumentation.common.utils import (
+    get_error_message,
+    get_llm_type,
+)
+
 TEAMAI_OUTPUT_PROCESSOR = {
     "type": "inference.framework",
     "attributes": [
@@ -9,44 +13,58 @@ TEAMAI_OUTPUT_PROCESSOR = {
             {
                 "_comment": "provider type, name, deployment",
                 "attribute": "type",
-                "accessor": lambda arguments: 'inference.' + (get_llm_type(arguments['instance']._client) or 'generic')
+                "accessor": lambda arguments: "inference."
+                + (get_llm_type(arguments["instance"]._client) or "generic"),
             },
             {
                 "attribute": "provider_name",
-                "accessor": lambda arguments: _helper.extract_provider_name(arguments['instance'])
+                "accessor": lambda arguments: _helper.extract_provider_name(
+                    arguments["instance"]
+                ),
             },
             {
                 "attribute": "inference_endpoint",
-                "accessor": lambda arguments: _helper.extract_inference_endpoint(arguments['instance'])
-            }
+                "accessor": lambda arguments: _helper.extract_inference_endpoint(
+                    arguments["instance"]
+                ),
+            },
         ],
         [
             {
                 "_comment": "LLM Model",
                 "attribute": "name",
-                "accessor": lambda arguments: arguments["instance"]._options.default_model if hasattr(arguments["instance"], "_options") else "unknown"
+                "accessor": lambda arguments: (
+                    arguments["instance"]._options.default_model
+                    if hasattr(arguments["instance"], "_options")
+                    else "unknown"
+                ),
             },
             {
                 "_comment": "LLM Model",
                 "attribute": "type",
-                "accessor": lambda arguments: 'model.llm.'+ arguments["instance"]._options.default_model if hasattr(arguments["instance"], "_options") else "unknown"
+                "accessor": lambda arguments: (
+                    "model.llm." + arguments["instance"]._options.default_model
+                    if hasattr(arguments["instance"], "_options")
+                    else "unknown"
+                ),
             },
             {
                 "attribute": "is_streaming",
-                "accessor": lambda arguments: arguments["instance"]._options.stream if hasattr(arguments["instance"], "_options") else False
-            }
-        ]
+                "accessor": lambda arguments: (
+                    arguments["instance"]._options.stream
+                    if hasattr(arguments["instance"], "_options")
+                    else False
+                ),
+            },
+        ],
     ],
     "events": [
         {
             "name": "data.input",
             "_comment": "input to Teams AI",
             "attributes": [
-                {
-                    "attribute": "input",
-                    "accessor": _helper.extract_messages
-                }
-            ]
+                {"attribute": "input", "accessor": _helper.extract_messages}
+            ],
         },
         {
             "name": "data.output",
@@ -54,17 +72,19 @@ TEAMAI_OUTPUT_PROCESSOR = {
             "attributes": [
                 {
                     "attribute": "error_code",
-                    "accessor": lambda arguments: get_error_message(arguments)
+                    "accessor": lambda arguments: get_error_message(arguments),
                 },
                 {
                     "attribute": "response",
-                    "accessor": lambda arguments: _helper.extract_assistant_message(arguments)
+                    "accessor": lambda arguments: _helper.extract_assistant_message(
+                        arguments
+                    ),
                 },
                 {
                     "attribute": "check_status",
-                    "accessor": lambda arguments: _helper.check_status(arguments)
-                }
-            ]
+                    "accessor": lambda arguments: _helper.check_status(arguments),
+                },
+            ],
         },
-    ]
+    ],
 }

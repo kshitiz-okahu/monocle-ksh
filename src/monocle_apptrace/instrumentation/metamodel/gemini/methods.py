@@ -8,17 +8,17 @@ from monocle_apptrace.instrumentation.metamodel.gemini.entities.retrieval import
 
 GEMINI_METHODS = [
     {
-      "package": "google.genai.models",
-      "object": "Models",
-      "method": "generate_content",
-      "wrapper_method": task_wrapper,
-      "output_processor": INFERENCE,
+        "package": "google.genai.models",
+        "object": "Models",
+        "method": "generate_content",
+        "wrapper_method": task_wrapper,
+        "output_processor": INFERENCE,
     },
     {
-      "package": "google.genai.models",
-      "object": "Models",
-      "method": "embed_content",
-      "wrapper_method": task_wrapper,
-      "output_processor": RETRIEVAL,
-    }
+        "package": "google.genai.models",
+        "object": "Models",
+        "method": "embed_content",
+        "wrapper_method": task_wrapper,
+        "output_processor": RETRIEVAL,
+    },
 ]

@@ -8,6 +8,7 @@ from enum import Enum
 
 class FinishType(Enum):
     """Enum for standardized finish types across all AI providers."""
+
     SUCCESS = "success"
     TRUNCATED = "truncated"
     CONTENT_FILTER = "content_filter"
@@ -21,17 +22,17 @@ OPENAI_FINISH_REASON_MAPPING = {
     "tool_calls": FinishType.SUCCESS.value,
     "function_call": FinishType.SUCCESS.value,  # deprecated but still possible
     "length": FinishType.TRUNCATED.value,
-    "content_filter": FinishType.CONTENT_FILTER.value
+    "content_filter": FinishType.CONTENT_FILTER.value,
 }
 
 # Anthropic finish reason mapping
 ANTHROPIC_FINISH_REASON_MAPPING = {
-    "end_turn": FinishType.SUCCESS.value,         # Natural completion
-    "max_tokens": FinishType.TRUNCATED.value,     # Hit max_tokens limit
-    "stop_sequence": FinishType.SUCCESS.value,    # Hit user stop sequence
-    "tool_use": FinishType.SUCCESS.value,         # Tool use triggered
-    "pause_turn": FinishType.SUCCESS.value,       # Paused for tool or server action
-    "refusal": FinishType.REFUSAL.value,          # Refused for safety/ethics
+    "end_turn": FinishType.SUCCESS.value,  # Natural completion
+    "max_tokens": FinishType.TRUNCATED.value,  # Hit max_tokens limit
+    "stop_sequence": FinishType.SUCCESS.value,  # Hit user stop sequence
+    "tool_use": FinishType.SUCCESS.value,  # Tool use triggered
+    "pause_turn": FinishType.SUCCESS.value,  # Paused for tool or server action
+    "refusal": FinishType.REFUSAL.value,  # Refused for safety/ethics
 }
 
 # Gemini finish reason mapping
@@ -41,7 +42,7 @@ GEMINI_FINISH_REASON_MAPPING = {
     "SAFETY": FinishType.CONTENT_FILTER.value,
     "RECITATION": FinishType.CONTENT_FILTER.value,
     "OTHER": FinishType.ERROR.value,
-    "FINISH_REASON_UNSPECIFIED": None
+    "FINISH_REASON_UNSPECIFIED": None,
 }
 
 # LlamaIndex finish reason mapping
@@ -52,28 +53,23 @@ LLAMAINDEX_FINISH_REASON_MAPPING = {
     "complete": FinishType.SUCCESS.value,
     "finished": FinishType.SUCCESS.value,
     "success": FinishType.SUCCESS.value,
-    
     # Token limits
     "length": FinishType.TRUNCATED.value,
     "max_tokens": FinishType.TRUNCATED.value,
     "token_limit": FinishType.TRUNCATED.value,
     "truncated": FinishType.TRUNCATED.value,
-    
     # Tool/function calling
     "tool_calls": FinishType.SUCCESS.value,
     "function_call": FinishType.SUCCESS.value,
     "agent_finish": FinishType.SUCCESS.value,
-    
     # Content filtering and safety
     "content_filter": FinishType.CONTENT_FILTER.value,
     "safety": FinishType.CONTENT_FILTER.value,
     "filtered": FinishType.CONTENT_FILTER.value,
-    
     # Errors
     "error": FinishType.ERROR.value,
     "failed": FinishType.ERROR.value,
     "exception": FinishType.ERROR.value,
-    
     # Provider-specific reasons that might pass through LlamaIndex
     # OpenAI reasons
     "end_turn": FinishType.SUCCESS.value,  # Anthropic
@@ -90,29 +86,24 @@ AZURE_AI_INFERENCE_FINISH_REASON_MAPPING = {
     "stop": FinishType.SUCCESS.value,
     "completed": FinishType.SUCCESS.value,
     "finished": FinishType.SUCCESS.value,
-    
     # Token limits
     "length": FinishType.TRUNCATED.value,
     "max_tokens": FinishType.TRUNCATED.value,
     "token_limit": FinishType.TRUNCATED.value,
     "max_completion_tokens": FinishType.TRUNCATED.value,
-    
     # Tool/function calling
     "tool_calls": FinishType.SUCCESS.value,
     "function_call": FinishType.SUCCESS.value,
-    
     # Content filtering and safety
     "content_filter": FinishType.CONTENT_FILTER.value,
     "content_filtered": FinishType.CONTENT_FILTER.value,
     "safety": FinishType.CONTENT_FILTER.value,
     "responsible_ai_policy": FinishType.CONTENT_FILTER.value,
-    
     # Errors
     "error": FinishType.ERROR.value,
     "failed": FinishType.ERROR.value,
     "exception": FinishType.ERROR.value,
     "timeout": FinishType.ERROR.value,
-    
     # Azure-specific reasons
     "model_error": FinishType.ERROR.value,
     "service_unavailable": FinishType.ERROR.value,
@@ -123,62 +114,53 @@ AZURE_AI_INFERENCE_FINISH_REASON_MAPPING = {
 # Based on AWS Bedrock Converse API and model-specific APIs
 BEDROCK_FINISH_REASON_MAPPING = {
     # Standard completion reasons
-    "end_turn": FinishType.SUCCESS.value,           # Natural completion
-    "stop": FinishType.SUCCESS.value,               # Hit stop sequence
-    "stop_sequence": FinishType.SUCCESS.value,      # Stop sequence triggered
-    "completed": FinishType.SUCCESS.value,          # Completion finished successfully
-    
+    "end_turn": FinishType.SUCCESS.value,  # Natural completion
+    "stop": FinishType.SUCCESS.value,  # Hit stop sequence
+    "stop_sequence": FinishType.SUCCESS.value,  # Stop sequence triggered
+    "completed": FinishType.SUCCESS.value,  # Completion finished successfully
     # Token limits
-    "max_tokens": FinishType.TRUNCATED.value,       # Hit max_tokens limit
-    "length": FinishType.TRUNCATED.value,           # Token length limit
-    "max_length": FinishType.TRUNCATED.value,       # Maximum length reached
-    "token_limit": FinishType.TRUNCATED.value,      # Token limit reached
-    
+    "max_tokens": FinishType.TRUNCATED.value,  # Hit max_tokens limit
+    "length": FinishType.TRUNCATED.value,  # Token length limit
+    "max_length": FinishType.TRUNCATED.value,  # Maximum length reached
+    "token_limit": FinishType.TRUNCATED.value,  # Token limit reached
     # Tool/function calling
-    "tool_use": FinishType.SUCCESS.value,           # Tool use triggered
-    "function_call": FinishType.SUCCESS.value,      # Function call triggered
-    
+    "tool_use": FinishType.SUCCESS.value,  # Tool use triggered
+    "function_call": FinishType.SUCCESS.value,  # Function call triggered
     # Content filtering and safety
-    "content_filter": FinishType.CONTENT_FILTER.value,    # Content filtered
+    "content_filter": FinishType.CONTENT_FILTER.value,  # Content filtered
     "content_filtered": FinishType.CONTENT_FILTER.value,  # Content was filtered
-    "safety": FinishType.CONTENT_FILTER.value,            # Safety filter triggered
-    "guardrails": FinishType.CONTENT_FILTER.value,        # Bedrock guardrails triggered
-    "blocked": FinishType.CONTENT_FILTER.value,           # Request blocked
-    
+    "safety": FinishType.CONTENT_FILTER.value,  # Safety filter triggered
+    "guardrails": FinishType.CONTENT_FILTER.value,  # Bedrock guardrails triggered
+    "blocked": FinishType.CONTENT_FILTER.value,  # Request blocked
     # Errors
-    "error": FinishType.ERROR.value,                # General error
-    "failed": FinishType.ERROR.value,               # Request failed
-    "exception": FinishType.ERROR.value,            # Exception occurred
-    "timeout": FinishType.ERROR.value,              # Request timeout
-    "model_error": FinishType.ERROR.value,          # Model-specific error
+    "error": FinishType.ERROR.value,  # General error
+    "failed": FinishType.ERROR.value,  # Request failed
+    "exception": FinishType.ERROR.value,  # Exception occurred
+    "timeout": FinishType.ERROR.value,  # Request timeout
+    "model_error": FinishType.ERROR.value,  # Model-specific error
     "service_unavailable": FinishType.ERROR.value,  # Service unavailable
-    "throttled": FinishType.ERROR.value,            # Request throttled
-    "rate_limit": FinishType.ERROR.value,           # Rate limit exceeded
-    "validation_error": FinishType.ERROR.value,     # Validation error
-    
+    "throttled": FinishType.ERROR.value,  # Request throttled
+    "rate_limit": FinishType.ERROR.value,  # Rate limit exceeded
+    "validation_error": FinishType.ERROR.value,  # Validation error
     # Model-specific reasons (various Bedrock models)
     # Claude models via Bedrock
-    "end_turn": FinishType.SUCCESS.value,           # Already defined above
-    "max_tokens": FinishType.TRUNCATED.value,       # Already defined above
-    "stop_sequence": FinishType.SUCCESS.value,      # Already defined above
-    "tool_use": FinishType.SUCCESS.value,           # Already defined above
-    
+    "end_turn": FinishType.SUCCESS.value,  # Already defined above
+    "max_tokens": FinishType.TRUNCATED.value,  # Already defined above
+    "stop_sequence": FinishType.SUCCESS.value,  # Already defined above
+    "tool_use": FinishType.SUCCESS.value,  # Already defined above
     # AI21 models via Bedrock
-    "endoftext": FinishType.SUCCESS.value,          # AI21 end of text
-    "length": FinishType.TRUNCATED.value,           # AI21 length limit
-    
+    "endoftext": FinishType.SUCCESS.value,  # AI21 end of text
+    "length": FinishType.TRUNCATED.value,  # AI21 length limit
     # Cohere models via Bedrock
-    "COMPLETE": FinishType.SUCCESS.value,           # Cohere completion
-    "MAX_TOKENS": FinishType.TRUNCATED.value,       # Cohere max tokens
-    "ERROR": FinishType.ERROR.value,                # Cohere error
-    
+    "COMPLETE": FinishType.SUCCESS.value,  # Cohere completion
+    "MAX_TOKENS": FinishType.TRUNCATED.value,  # Cohere max tokens
+    "ERROR": FinishType.ERROR.value,  # Cohere error
     # Meta Llama models via Bedrock
-    "stop": FinishType.SUCCESS.value,               # Already defined above
-    "length": FinishType.TRUNCATED.value,           # Already defined above
-    
+    "stop": FinishType.SUCCESS.value,  # Already defined above
+    "length": FinishType.TRUNCATED.value,  # Already defined above
     # Amazon Titan models via Bedrock
-    "FINISH": FinishType.SUCCESS.value,             # Titan finish
-    "LENGTH": FinishType.TRUNCATED.value,           # Titan length limit
+    "FINISH": FinishType.SUCCESS.value,  # Titan finish
+    "LENGTH": FinishType.TRUNCATED.value,  # Titan length limit
     "CONTENT_FILTERED": FinishType.CONTENT_FILTER.value,  # Titan content filter
 }
 
@@ -190,34 +172,27 @@ LANGCHAIN_FINISH_REASON_MAPPING = {
     "stop": FinishType.SUCCESS.value,
     "complete": FinishType.SUCCESS.value,
     "finished": FinishType.SUCCESS.value,
-    
     # Token limits
     "length": FinishType.TRUNCATED.value,
     "max_tokens": FinishType.TRUNCATED.value,
     "token_limit": FinishType.TRUNCATED.value,
-    
     # Tool/function calling
     "tool_calls": FinishType.SUCCESS.value,
     "function_call": FinishType.SUCCESS.value,
-    
     # Content filtering and safety
     "content_filter": FinishType.CONTENT_FILTER.value,
     "safety": FinishType.CONTENT_FILTER.value,
     "filtered": FinishType.CONTENT_FILTER.value,
-    
     # Errors
     "error": FinishType.ERROR.value,
     "failed": FinishType.ERROR.value,
     "exception": FinishType.ERROR.value,
-    
     # Provider-specific reasons that might pass through LangChain
     # OpenAI reasons
     "stop": FinishType.SUCCESS.value,  # Already defined above
-    
     # Anthropic reasons
     "end_turn": FinishType.SUCCESS.value,
     "stop_sequence": FinishType.SUCCESS.value,
-    
     # Gemini reasons
     "STOP": FinishType.SUCCESS.value,
     "SAFETY": FinishType.CONTENT_FILTER.value,
@@ -251,28 +226,42 @@ def map_langchain_finish_reason_to_finish_type(finish_reason):
     """Map LangChain finish_reason to standardized finish_type."""
     if not finish_reason:
         return None
-    
+
     # Convert to lowercase for case-insensitive matching
-    finish_reason_lower = finish_reason.lower() if isinstance(finish_reason, str) else str(finish_reason).lower()
-    
+    finish_reason_lower = (
+        finish_reason.lower()
+        if isinstance(finish_reason, str)
+        else str(finish_reason).lower()
+    )
+
     # Try direct mapping first
     if finish_reason in LANGCHAIN_FINISH_REASON_MAPPING:
         return LANGCHAIN_FINISH_REASON_MAPPING[finish_reason]
-    
+
     # Try lowercase mapping
     if finish_reason_lower in LANGCHAIN_FINISH_REASON_MAPPING:
         return LANGCHAIN_FINISH_REASON_MAPPING[finish_reason_lower]
-    
+
     # If no direct mapping, try to infer from common patterns
-    if any(keyword in finish_reason_lower for keyword in ['stop', 'complete', 'success', 'done']):
+    if any(
+        keyword in finish_reason_lower
+        for keyword in ["stop", "complete", "success", "done"]
+    ):
         return FinishType.SUCCESS.value
-    elif any(keyword in finish_reason_lower for keyword in ['length', 'token', 'limit', 'truncat']):
+    elif any(
+        keyword in finish_reason_lower
+        for keyword in ["length", "token", "limit", "truncat"]
+    ):
         return FinishType.TRUNCATED.value
-    elif any(keyword in finish_reason_lower for keyword in ['filter', 'safety', 'block']):
+    elif any(
+        keyword in finish_reason_lower for keyword in ["filter", "safety", "block"]
+    ):
         return FinishType.CONTENT_FILTER.value
-    elif any(keyword in finish_reason_lower for keyword in ['error', 'fail', 'exception']):
+    elif any(
+        keyword in finish_reason_lower for keyword in ["error", "fail", "exception"]
+    ):
         return FinishType.ERROR.value
-    
+
     return None
 
 
@@ -280,28 +269,42 @@ def map_llamaindex_finish_reason_to_finish_type(finish_reason):
     """Map LlamaIndex finish_reason to standardized finish_type."""
     if not finish_reason:
         return None
-    
+
     # Convert to lowercase for case-insensitive matching
-    finish_reason_lower = finish_reason.lower() if isinstance(finish_reason, str) else str(finish_reason).lower()
-    
+    finish_reason_lower = (
+        finish_reason.lower()
+        if isinstance(finish_reason, str)
+        else str(finish_reason).lower()
+    )
+
     # Try direct mapping first
     if finish_reason in LLAMAINDEX_FINISH_REASON_MAPPING:
         return LLAMAINDEX_FINISH_REASON_MAPPING[finish_reason]
-    
+
     # Try lowercase mapping
     if finish_reason_lower in LLAMAINDEX_FINISH_REASON_MAPPING:
         return LLAMAINDEX_FINISH_REASON_MAPPING[finish_reason_lower]
-    
+
     # If no direct mapping, try to infer from common patterns
-    if any(keyword in finish_reason_lower for keyword in ['stop', 'complete', 'success', 'done', 'finish']):
+    if any(
+        keyword in finish_reason_lower
+        for keyword in ["stop", "complete", "success", "done", "finish"]
+    ):
         return FinishType.SUCCESS.value
-    elif any(keyword in finish_reason_lower for keyword in ['length', 'token', 'limit', 'truncat']):
+    elif any(
+        keyword in finish_reason_lower
+        for keyword in ["length", "token", "limit", "truncat"]
+    ):
         return FinishType.TRUNCATED.value
-    elif any(keyword in finish_reason_lower for keyword in ['filter', 'safety', 'block']):
+    elif any(
+        keyword in finish_reason_lower for keyword in ["filter", "safety", "block"]
+    ):
         return FinishType.CONTENT_FILTER.value
-    elif any(keyword in finish_reason_lower for keyword in ['error', 'fail', 'exception']):
+    elif any(
+        keyword in finish_reason_lower for keyword in ["error", "fail", "exception"]
+    ):
         return FinishType.ERROR.value
-    
+
     return None
 
 
@@ -309,28 +312,51 @@ def map_azure_ai_inference_finish_reason_to_finish_type(finish_reason):
     """Map Azure AI Inference finish_reason to standardized finish_type."""
     if not finish_reason:
         return None
-    
+
     # Convert to lowercase for case-insensitive matching
-    finish_reason_lower = finish_reason.lower() if isinstance(finish_reason, str) else str(finish_reason).lower()
-    
+    finish_reason_lower = (
+        finish_reason.lower()
+        if isinstance(finish_reason, str)
+        else str(finish_reason).lower()
+    )
+
     # Try direct mapping first
     if finish_reason in AZURE_AI_INFERENCE_FINISH_REASON_MAPPING:
         return AZURE_AI_INFERENCE_FINISH_REASON_MAPPING[finish_reason]
-    
+
     # Try lowercase mapping
     if finish_reason_lower in AZURE_AI_INFERENCE_FINISH_REASON_MAPPING:
         return AZURE_AI_INFERENCE_FINISH_REASON_MAPPING[finish_reason_lower]
-    
+
     # If no direct mapping, try to infer from common patterns
-    if any(keyword in finish_reason_lower for keyword in ['stop', 'complete', 'success', 'done', 'finish']):
+    if any(
+        keyword in finish_reason_lower
+        for keyword in ["stop", "complete", "success", "done", "finish"]
+    ):
         return FinishType.SUCCESS.value
-    elif any(keyword in finish_reason_lower for keyword in ['length', 'token', 'limit', 'truncat']):
+    elif any(
+        keyword in finish_reason_lower
+        for keyword in ["length", "token", "limit", "truncat"]
+    ):
         return FinishType.TRUNCATED.value
-    elif any(keyword in finish_reason_lower for keyword in ['filter', 'safety', 'block', 'responsible_ai', 'content_filter']):
+    elif any(
+        keyword in finish_reason_lower
+        for keyword in ["filter", "safety", "block", "responsible_ai", "content_filter"]
+    ):
         return FinishType.CONTENT_FILTER.value
-    elif any(keyword in finish_reason_lower for keyword in ['error', 'fail', 'exception', 'timeout', 'unavailable', 'rate_limit']):
+    elif any(
+        keyword in finish_reason_lower
+        for keyword in [
+            "error",
+            "fail",
+            "exception",
+            "timeout",
+            "unavailable",
+            "rate_limit",
+        ]
+    ):
         return FinishType.ERROR.value
-    
+
     return None
 
 
@@ -338,26 +364,59 @@ def map_bedrock_finish_reason_to_finish_type(finish_reason):
     """Map AWS Bedrock finish_reason/stopReason to standardized finish_type."""
     if not finish_reason:
         return None
-    
+
     # Convert to lowercase for case-insensitive matching
-    finish_reason_lower = finish_reason.lower() if isinstance(finish_reason, str) else str(finish_reason).lower()
-    
+    finish_reason_lower = (
+        finish_reason.lower()
+        if isinstance(finish_reason, str)
+        else str(finish_reason).lower()
+    )
+
     # Try direct mapping first
     if finish_reason in BEDROCK_FINISH_REASON_MAPPING:
         return BEDROCK_FINISH_REASON_MAPPING[finish_reason]
-    
+
     # Try lowercase mapping
     if finish_reason_lower in BEDROCK_FINISH_REASON_MAPPING:
         return BEDROCK_FINISH_REASON_MAPPING[finish_reason_lower]
-    
+
     # If no direct mapping, try to infer from common patterns
-    if any(keyword in finish_reason_lower for keyword in ['stop', 'complete', 'success', 'done', 'finish', 'end_turn', 'endoftext']):
+    if any(
+        keyword in finish_reason_lower
+        for keyword in [
+            "stop",
+            "complete",
+            "success",
+            "done",
+            "finish",
+            "end_turn",
+            "endoftext",
+        ]
+    ):
         return FinishType.SUCCESS.value
-    elif any(keyword in finish_reason_lower for keyword in ['length', 'token', 'limit', 'truncat', 'max_tokens']):
+    elif any(
+        keyword in finish_reason_lower
+        for keyword in ["length", "token", "limit", "truncat", "max_tokens"]
+    ):
         return FinishType.TRUNCATED.value
-    elif any(keyword in finish_reason_lower for keyword in ['filter', 'safety', 'block', 'guardrails', 'content_filter']):
+    elif any(
+        keyword in finish_reason_lower
+        for keyword in ["filter", "safety", "block", "guardrails", "content_filter"]
+    ):
         return FinishType.CONTENT_FILTER.value
-    elif any(keyword in finish_reason_lower for keyword in ['error', 'fail', 'exception', 'timeout', 'unavailable', 'rate_limit', 'throttled', 'validation']):
+    elif any(
+        keyword in finish_reason_lower
+        for keyword in [
+            "error",
+            "fail",
+            "exception",
+            "timeout",
+            "unavailable",
+            "rate_limit",
+            "throttled",
+            "validation",
+        ]
+    ):
         return FinishType.ERROR.value
-    
+
     return None

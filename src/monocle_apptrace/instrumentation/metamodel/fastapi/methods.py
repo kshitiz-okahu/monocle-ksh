@@ -1,5 +1,8 @@
 from monocle_apptrace.instrumentation.common.wrapper import atask_wrapper
-from monocle_apptrace.instrumentation.metamodel.fastapi.entities.http import FASTAPI_HTTP_PROCESSOR, FASTAPI_RESPONSE_PROCESSOR
+from monocle_apptrace.instrumentation.metamodel.fastapi.entities.http import (
+    FASTAPI_HTTP_PROCESSOR,
+    FASTAPI_RESPONSE_PROCESSOR,
+)
 
 FASTAPI_METHODS = [
     {
@@ -18,6 +21,6 @@ FASTAPI_METHODS = [
         "span_name": "fastapi.response",
         "wrapper_method": atask_wrapper,
         "span_handler": "fastapi_response_handler",
-        "output_processor": FASTAPI_RESPONSE_PROCESSOR
-    }
+        "output_processor": FASTAPI_RESPONSE_PROCESSOR,
+    },
 ]

@@ -4,18 +4,15 @@ A2A_CLIENT = {
     "type": "agentic.invocation",
     "attributes": [
         [
-            {
-                "attribute": "type",
-                "accessor": lambda arguments: "agent2agent.server"
-            },
+            {"attribute": "type", "accessor": lambda arguments: "agent2agent.server"},
             {
                 "attribute": "url",
-                "accessor": lambda arguments: _helper.get_url(arguments)
+                "accessor": lambda arguments: _helper.get_url(arguments),
             },
             {
                 "attribute": "method",
-                "accessor": lambda arguments: _helper.get_method(arguments)
-            }
+                "accessor": lambda arguments: _helper.get_method(arguments),
+            },
         ]
     ],
     "events": [
@@ -25,12 +22,14 @@ A2A_CLIENT = {
                 {
                     "_comment": "this is a2a input",
                     "attribute": "input",
-                    "accessor": lambda arguments: _helper.get_params_arguments(arguments)
+                    "accessor": lambda arguments: _helper.get_params_arguments(
+                        arguments
+                    ),
                 },
                 {
                     "_comment": "this is a2a input",
                     "attribute": "role",
-                    "accessor": lambda arguments: _helper.get_role(arguments)
+                    "accessor": lambda arguments: _helper.get_role(arguments),
                 },
             ],
         },
@@ -40,12 +39,14 @@ A2A_CLIENT = {
                 {
                     "_comment": "this is a2a output",
                     "attribute": "status",
-                    "accessor": lambda arguments: _helper.get_status(arguments, "status")
+                    "accessor": lambda arguments: _helper.get_status(
+                        arguments, "status"
+                    ),
                 },
                 {
                     "_comment": "this is a2a output",
                     "attribute": "response",
-                    "accessor": lambda arguments: _helper.get_response(arguments)   
+                    "accessor": lambda arguments: _helper.get_response(arguments),
                 },
             ],
         },
@@ -108,5 +109,3 @@ A2A_CLIENT = {
 #         # },
 #     ],
 # }
-
-

@@ -1,4 +1,5 @@
 from monocle_apptrace.instrumentation.metamodel.azfunc import _helper
+
 AZFUNC_HTTP_PROCESSOR = {
     "type": "http.process",
     "attributes": [
@@ -6,17 +7,17 @@ AZFUNC_HTTP_PROCESSOR = {
             {
                 "_comment": "request method, request URI",
                 "attribute": "method",
-                "accessor": lambda arguments: _helper.get_method(arguments['kwargs'])
+                "accessor": lambda arguments: _helper.get_method(arguments["kwargs"]),
             },
             {
                 "_comment": "request method, request URI",
                 "attribute": "route",
-                "accessor": lambda arguments: _helper.get_route(arguments['kwargs'])
+                "accessor": lambda arguments: _helper.get_route(arguments["kwargs"]),
             },
             {
                 "_comment": "request method, request URI",
                 "attribute": "body",
-                "accessor": lambda arguments: _helper.get_body(arguments['kwargs'])
+                "accessor": lambda arguments: _helper.get_body(arguments["kwargs"]),
             },
         ]
     ],
@@ -27,9 +28,11 @@ AZFUNC_HTTP_PROCESSOR = {
                 {
                     "_comment": "route params",
                     "attribute": "params",
-                    "accessor": lambda arguments: _helper.get_params(arguments['kwargs'])
+                    "accessor": lambda arguments: _helper.get_params(
+                        arguments["kwargs"]
+                    ),
                 }
-            ]
+            ],
         },
         {
             "name": "data.output",
@@ -37,15 +40,18 @@ AZFUNC_HTTP_PROCESSOR = {
                 {
                     "_comment": "status from HTTP response",
                     "attribute": "status",
-                    "accessor": lambda arguments: _helper.extract_status(arguments['result'])
+                    "accessor": lambda arguments: _helper.extract_status(
+                        arguments["result"]
+                    ),
                 },
                 {
                     "_comment": "this is result from LLM",
                     "attribute": "response",
-                    "accessor": lambda arguments: _helper.extract_response(arguments['result'])
-                }
-            ]
-        }
-
-    ]
+                    "accessor": lambda arguments: _helper.extract_response(
+                        arguments["result"]
+                    ),
+                },
+            ],
+        },
+    ],
 }

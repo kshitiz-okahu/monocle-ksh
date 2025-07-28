@@ -81,6 +81,7 @@ def get_url(arguments):
 
     return url
 
+
 # this extracts the url from the langchain mcp adapter tools and attaches it to the context.
 @with_tracer_wrapper
 def langchain_mcp_wrapper(

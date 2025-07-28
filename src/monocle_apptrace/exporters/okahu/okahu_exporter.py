@@ -4,7 +4,11 @@ import os
 from typing import Callable, Optional, Sequence
 import requests
 from opentelemetry.sdk.trace import ReadableSpan
-from opentelemetry.sdk.trace.export import SpanExporter, SpanExportResult, ConsoleSpanExporter
+from opentelemetry.sdk.trace.export import (
+    SpanExporter,
+    SpanExportResult,
+    ConsoleSpanExporter,
+)
 from requests.exceptions import ReadTimeout
 from monocle_apptrace.exporters.base_exporter import SpanExporterBase
 from monocle_apptrace.exporters.exporter_processor import ExportTaskProcessor
@@ -17,15 +21,17 @@ logger = logging.getLogger(__name__)
 
 class OkahuSpanExporter(SpanExporterBase):
     def __init__(
-            self,
-            endpoint: Optional[str] = None,
-            timeout: Optional[int] = None,
-            session: Optional[requests.Session] = None,
-            task_processor: ExportTaskProcessor = None
+        self,
+        endpoint: Optional[str] = None,
+        timeout: Optional[int] = None,
+        session: Optional[requests.Session] = None,
+        task_processor: ExportTaskProcessor = None,
     ):
         """Okahu exporter."""
         super().__init__()
-        okahu_endpoint: str = os.environ.get("OKAHU_INGESTION_ENDPOINT", OKAHU_PROD_INGEST_ENDPOINT)
+        okahu_endpoint: str = os.environ.get(
+            "OKAHU_INGESTION_ENDPOINT", OKAHU_PROD_INGEST_ENDPOINT
+        )
         self.endpoint = endpoint or okahu_endpoint
         api_key: str = os.environ.get("OKAHU_API_KEY")
         self._closed = False
@@ -44,7 +50,7 @@ class OkahuSpanExporter(SpanExporterBase):
     def export(self, spans: Sequence[ReadableSpan]) -> SpanExportResult:
         # After the call to Shutdown subsequent calls to Export are
         # not allowed and should return a Failure result
-        if not hasattr(self, 'session'):
+        if not hasattr(self, "session"):
             return self.exporter.export(spans)
 
         if self._closed:
@@ -53,9 +59,7 @@ class OkahuSpanExporter(SpanExporterBase):
         if len(spans) == 0:
             return
 
-        span_list = {
-            "batch": []
-        }
+        span_list = {"batch": []}
 
         # append the batch object with all the spans object
         for span in spans:
@@ -68,8 +72,12 @@ class OkahuSpanExporter(SpanExporterBase):
             else:
                 obj["parent_id"] = remove_0x_from_start(obj["parent_id"])
             if obj["context"] is not None:
-                obj["context"]["trace_id"] = remove_0x_from_start(obj["context"]["trace_id"])
-                obj["context"]["span_id"] = remove_0x_from_start(obj["context"]["span_id"])
+                obj["context"]["trace_id"] = remove_0x_from_start(
+                    obj["context"]["trace_id"]
+                )
+                obj["context"]["span_id"] = remove_0x_from_start(
+                    obj["context"]["span_id"]
+                )
             span_list["batch"].append(obj)
 
         # Calculate is_root_span by checking if any span has no parent
@@ -89,7 +97,9 @@ class OkahuSpanExporter(SpanExporterBase):
                         result.text,
                     )
                     return SpanExportResult.FAILURE
-                logger.debug("spans successfully exported to okahu. Is root span: %s", is_root)
+                logger.debug(
+                    "spans successfully exported to okahu. Is root span: %s", is_root
+                )
                 return SpanExportResult.SUCCESS
             except ReadTimeout as e:
                 logger.warning("Trace export timed out: %s", str(e))
@@ -105,7 +115,7 @@ class OkahuSpanExporter(SpanExporterBase):
         if self._closed:
             logger.warning("Exporter already shutdown, ignoring call")
             return
-        if hasattr(self, 'session'):
+        if hasattr(self, "session"):
             self.session.close()
         self._closed = True
 

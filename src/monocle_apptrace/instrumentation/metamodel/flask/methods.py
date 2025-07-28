@@ -1,5 +1,8 @@
 from monocle_apptrace.instrumentation.common.wrapper import task_wrapper
-from monocle_apptrace.instrumentation.metamodel.flask.entities.http import FLASK_HTTP_PROCESSOR, FLASK_RESPONSE_PROCESSOR
+from monocle_apptrace.instrumentation.metamodel.flask.entities.http import (
+    FLASK_HTTP_PROCESSOR,
+    FLASK_RESPONSE_PROCESSOR,
+)
 
 FLASK_METHODS = [
     {
@@ -17,6 +20,6 @@ FLASK_METHODS = [
         "wrapper_method": task_wrapper,
         "span_handler": "flask_response_handler",
         "output_processor": FLASK_RESPONSE_PROCESSOR,
-        "skip_span": True
-    }
+        "skip_span": True,
+    },
 ]

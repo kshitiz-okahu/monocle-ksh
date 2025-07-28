@@ -13,7 +13,7 @@ OPENAI_METHODS = [
         "method": "create",
         "wrapper_method": task_wrapper,
         "span_handler": "openai_handler",
-        "output_processor": INFERENCE
+        "output_processor": INFERENCE,
     },
     {
         "package": "openai.resources.chat.completions",
@@ -21,7 +21,7 @@ OPENAI_METHODS = [
         "method": "create",
         "wrapper_method": atask_wrapper,
         "span_handler": "openai_handler",
-        "output_processor": INFERENCE
+        "output_processor": INFERENCE,
     },
     {
         "package": "openai.resources.embeddings",
@@ -29,7 +29,7 @@ OPENAI_METHODS = [
         "method": "create",
         "wrapper_method": task_wrapper,
         "span_handler": "openai_handler",
-        "output_processor": RETRIEVAL
+        "output_processor": RETRIEVAL,
     },
     {
         "package": "openai.resources.embeddings",
@@ -37,7 +37,7 @@ OPENAI_METHODS = [
         "method": "create",
         "wrapper_method": atask_wrapper,
         "span_handler": "openai_handler",
-        "output_processor": RETRIEVAL
+        "output_processor": RETRIEVAL,
     },
     {
         "package": "openai.resources.responses",
@@ -45,7 +45,7 @@ OPENAI_METHODS = [
         "method": "create",
         "wrapper_method": task_wrapper,
         "span_handler": "openai_handler",
-        "output_processor": INFERENCE
+        "output_processor": INFERENCE,
     },
     {
         "package": "openai.resources.responses",
@@ -53,7 +53,6 @@ OPENAI_METHODS = [
         "method": "create",
         "wrapper_method": atask_wrapper,
         "span_handler": "openai_handler",
-        "output_processor": INFERENCE
-    }
-
+        "output_processor": INFERENCE,
+    },
 ]

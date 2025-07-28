@@ -9,7 +9,9 @@ from monocle_apptrace.instrumentation.metamodel.teamsai.entities.inference.teams
 )
 from monocle_apptrace.instrumentation.metamodel.teamsai.entities.inference.actionplanner_output_processor import (
     ACTIONPLANNER_OUTPUT_PROCESSOR,
-) 
+)
+
+
 def get_id(args, kwargs):
     """
     Extracts the ID from the context.
@@ -22,31 +24,54 @@ def get_id(args, kwargs):
         if channel_id == "msteams":
             scopes[f"msteams.activity.type"] = context.activity.type or ""
 
-            if hasattr(context.activity,"conversation"):
-                scopes[f"msteams.conversation.id"] = context.activity.conversation.id or ""
-                scopes[f"msteams.conversation.type"] = context.activity.conversation.conversation_type or ""
-                scopes[f"msteams.conversation.name"] = context.activity.conversation.name or ""
+            if hasattr(context.activity, "conversation"):
+                scopes[f"msteams.conversation.id"] = (
+                    context.activity.conversation.id or ""
+                )
+                scopes[f"msteams.conversation.type"] = (
+                    context.activity.conversation.conversation_type or ""
+                )
+                scopes[f"msteams.conversation.name"] = (
+                    context.activity.conversation.name or ""
+                )
 
-            if hasattr(context.activity,"from_property"):
-                scopes[f"msteams.user.from_property.id"] = context.activity.from_property.id or ""
-                scopes[f"msteams.user.from_property.name"] = context.activity.from_property.name or ""
-                scopes[f"msteams.user.from_property.role"] = context.activity.from_property.role or ""
+            if hasattr(context.activity, "from_property"):
+                scopes[f"msteams.user.from_property.id"] = (
+                    context.activity.from_property.id or ""
+                )
+                scopes[f"msteams.user.from_property.name"] = (
+                    context.activity.from_property.name or ""
+                )
+                scopes[f"msteams.user.from_property.role"] = (
+                    context.activity.from_property.role or ""
+                )
 
-            if hasattr(context.activity,"recipient"):
+            if hasattr(context.activity, "recipient"):
                 scopes[f"msteams.recipient.id"] = context.activity.recipient.id or ""
 
-            if hasattr(context.activity,"channel_data"):
+            if hasattr(context.activity, "channel_data"):
                 if "tenant" in context.activity.channel_data:
-                    scopes[f"msteams.channel_data.tenant.id"] = context.activity.channel_data['tenant']['id'] or ""
+                    scopes[f"msteams.channel_data.tenant.id"] = (
+                        context.activity.channel_data["tenant"]["id"] or ""
+                    )
                 if "team" in context.activity.channel_data:
-                    scopes[f"msteams.channel_data.team.id"] = context.activity.channel_data['team']['id'] or ""
-                    if "name" in context.activity.channel_data['team']:
-                        scopes[f"msteams.channel_data.team.name"] = context.activity.channel_data['team']['name'] or ""
+                    scopes[f"msteams.channel_data.team.id"] = (
+                        context.activity.channel_data["team"]["id"] or ""
+                    )
+                    if "name" in context.activity.channel_data["team"]:
+                        scopes[f"msteams.channel_data.team.name"] = (
+                            context.activity.channel_data["team"]["name"] or ""
+                        )
                 if "channel" in context.activity.channel_data:
-                    scopes[f"msteams.channel_data.channel.id"] = context.activity.channel_data['channel']['id'] or ""
-                    if "name" in context.activity.channel_data['channel']:
-                        scopes[f"msteams.channel_data.channel.name"] = context.activity.channel_data['channel']['name'] or ""
+                    scopes[f"msteams.channel_data.channel.id"] = (
+                        context.activity.channel_data["channel"]["id"] or ""
+                    )
+                    if "name" in context.activity.channel_data["channel"]:
+                        scopes[f"msteams.channel_data.channel.name"] = (
+                            context.activity.channel_data["channel"]["name"] or ""
+                        )
     return scopes
+
 
 TEAMAI_METHODS = [
     {
@@ -68,6 +93,6 @@ TEAMAI_METHODS = [
         "object": "ActionPlanner",
         "method": "complete_prompt",
         "scope_values": get_id,
-        "wrapper_method": ascopes_wrapper,  
-    }
+        "wrapper_method": ascopes_wrapper,
+    },
 ]

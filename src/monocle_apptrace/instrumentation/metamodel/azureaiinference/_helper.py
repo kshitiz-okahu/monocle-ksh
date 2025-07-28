@@ -7,7 +7,9 @@ from monocle_apptrace.instrumentation.common.utils import (
     get_exception_message,
     get_status_code,
 )
-from monocle_apptrace.instrumentation.metamodel.finish_types import map_azure_ai_inference_finish_reason_to_finish_type
+from monocle_apptrace.instrumentation.metamodel.finish_types import (
+    map_azure_ai_inference_finish_reason_to_finish_type,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +99,8 @@ def extract_assistant_message(arguments: Dict[str, Any]) -> str:
                 # If the role is assistant, we can assume it's a chat completion
                 role = "assistant"
             messages.append({role: result.output_text})
-        if (hasattr(result, "choices")
+        if (
+            hasattr(result, "choices")
             and result.choices
             and result.choices[0].message
             and result.choices[0].message.content
@@ -185,9 +188,13 @@ def get_model_name(arguments: Dict[str, Any]) -> str:
 
         # Try to get from instance
         instance = arguments.get("instance")
-        if arguments.get('kwargs') and arguments.get('kwargs').get('model'):
-            return arguments['kwargs'].get('model')
-        if instance and hasattr(instance, "_config") and hasattr(instance._config, "model"):
+        if arguments.get("kwargs") and arguments.get("kwargs").get("model"):
+            return arguments["kwargs"].get("model")
+        if (
+            instance
+            and hasattr(instance, "_config")
+            and hasattr(instance._config, "model")
+        ):
             return instance._config.endpoint.split("/")[-1]
 
         return ""
@@ -198,7 +205,11 @@ def get_model_name(arguments: Dict[str, Any]) -> str:
 
 def get_inference_type(arguments) -> str:
     instance = arguments.get("instance")
-    if instance and hasattr(instance, "_config") and hasattr(instance._config, "endpoint"):
+    if (
+        instance
+        and hasattr(instance, "_config")
+        and hasattr(instance._config, "endpoint")
+    ):
         endpoint = instance._config.endpoint
         try:
             parsed = urlparse(endpoint)
@@ -239,23 +250,23 @@ def extract_finish_reason(arguments: Dict[str, Any]) -> Optional[str]:
                 if "content_filter" in message.lower():
                     return "content_filter"
             return "error"
-        
+
         result = arguments.get("result")
         if result is None:
             return None
-            
+
         # Check various possible locations for finish_reason in Azure AI Inference responses
-        
+
         # Direct finish_reason attribute
         if hasattr(result, "finish_reason") and result.finish_reason:
             return result.finish_reason
-            
+
         # Check for choices structure (OpenAI-compatible format)
         if hasattr(result, "choices") and result.choices:
             choice = result.choices[0]
             if hasattr(choice, "finish_reason") and choice.finish_reason:
                 return choice.finish_reason
-        
+
         # Check for additional metadata or response attributes
         if hasattr(result, "additional_kwargs") and result.additional_kwargs:
             kwargs = result.additional_kwargs
@@ -263,7 +274,7 @@ def extract_finish_reason(arguments: Dict[str, Any]) -> Optional[str]:
                 for key in ["finish_reason", "stop_reason"]:
                     if key in kwargs:
                         return kwargs[key]
-        
+
         # Check for response metadata
         if hasattr(result, "response_metadata") and result.response_metadata:
             metadata = result.response_metadata
@@ -271,23 +282,23 @@ def extract_finish_reason(arguments: Dict[str, Any]) -> Optional[str]:
                 for key in ["finish_reason", "stop_reason"]:
                     if key in metadata:
                         return metadata[key]
-        
+
         # Check for streaming response with accumulated finish reason
         if hasattr(result, "type") and result.type == "stream":
             # For streaming responses, default to stop if completed successfully
             return "stop"
-        
+
         # If no specific finish reason found, infer from status
         status_code = get_status_code(arguments)
-        if status_code == 'success':
+        if status_code == "success":
             return "stop"  # Default success finish reason
-        elif status_code == 'error':
+        elif status_code == "error":
             return "error"
-            
+
     except Exception as e:
         logger.warning("Warning: Error occurred in extract_finish_reason: %s", str(e))
         return None
-    
+
     return None
 
 
